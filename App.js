@@ -8,6 +8,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 export default function App() {
   const [cameraPermission, setCameraPermission] = Camera.useCameraPermissions()
   const [type, setTypes] = useState(Camera.Constants.Type.back);
+  const [cameraActive, setcameraActive] = useState(false)
   const [cameraRef, setCameraRef] = useState(null);
 
   if (cameraPermission === null) {
@@ -17,12 +18,15 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Camera app template</Text>
-      <View style={styles.cameraContainer}>
-        <Camera style={styles.camera} type={type} ref={ref => setCameraRef(ref)} />
-      </View>
-      <TouchableOpacity style={{ width: 100 }} onPress={() => alert()}>
-        <Text>Capture Image</Text>
-      </TouchableOpacity>
+      {
+        cameraActive &&
+        <View style={styles.cameraContainer}>
+          <Camera style={styles.camera} type={type} ref={ref => setCameraRef(ref)} />
+          <TouchableOpacity style={{ width: 100 }} onPress={() => alert()}>
+            <Text>Capture Image</Text>
+          </TouchableOpacity>
+        </View>
+      }
       <StatusBar style="auto" />
     </View>
   );
@@ -30,7 +34,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 2,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
