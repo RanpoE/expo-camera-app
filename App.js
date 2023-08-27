@@ -20,6 +20,7 @@ export default function App() {
   const handleCamera = () => {
     setCameraPermission()
     setCameraActive(true)
+    setModalVisible(false)
   }
 
   const toggleModal = () => {
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
   modal: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     height: 200,
   },
   sectionContainer: {
