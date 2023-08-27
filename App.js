@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Camera } from 'expo-camera';
-import { StyleSheet, Text, View, Pressable, Image} from 'react-native';
+import { StyleSheet, Text, View, Pressable, Image, Button } from 'react-native';
 import { useFonts } from 'expo-font';
-import { ConfigIcon, ManIcon } from './assets/images';
+import { CameraIcon, ConfigIcon, FolderIcon, ManIcon, NoIcon, YesIcon } from './assets/images';
+import Modal from "react-native-modal";
+
 
 export default function App() {
   const [cameraPermission, setCameraPermission] = Camera.useCameraPermissions()
   const [type, setTypes] = useState(Camera.Constants.Type.back);
   const [cameraActive, setCameraActive] = useState(false)
   const [cameraRef, setCameraRef] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
   const [fontsLoaded] = useFonts({
     'sao-font': require('./assets/fonts/sao-font.ttf')
   })
@@ -18,6 +21,10 @@ export default function App() {
     setCameraPermission()
     setCameraActive(true)
   }
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>
@@ -39,13 +46,28 @@ export default function App() {
           </View>
           :
           <View style={styles.sectionContainer}>
-            <Pressable onPress={() => alert()}>
-              <Image source={ManIcon} style={styles.image}/>
+            <Pressable onPress={toggleModal}>
+              <Image source={FolderIcon} style={styles.image} />
             </Pressable>
             <Pressable onPress={handleCamera}>
-              <Image source={ConfigIcon} style={styles.image}/>
+              <Image source={CameraIcon} style={styles.image} />
             </Pressable>
-          </View>}
+          </View>
+      }
+
+      <Modal isVisible={isModalVisible} width={200}>
+        <View style={styles.modal}>
+          <Text style={styles.modalHeader}>Allow file read</Text>
+          <View style={styles.sectionContainer}>
+            <Pressable onPress={toggleModal}>
+              <Image source={NoIcon} style={styles.image} />
+            </Pressable>
+            <Pressable onPress={handleCamera}>
+              <Image source={YesIcon} style={styles.image} />
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
       <StatusBar style="auto" />
     </View>
   );
@@ -60,7 +82,18 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 24,
-    fontFamily: 'sao-font'
+    fontFamily: 'sao-font',
+  },
+  modalHeader: {
+    fontSize: 24,
+    fontFamily: 'sao-font',
+    color: 'yellow'
+  },
+  modal: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 200,
   },
   sectionContainer: {
     flexDirection: 'row',
@@ -79,7 +112,7 @@ const styles = StyleSheet.create({
   camera: {
   },
   image: {
-    height: 100,
-    width: 100,
+    height: 70,
+    width: 70,
   }
 });
